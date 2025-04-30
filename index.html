@@ -128,7 +128,6 @@
             <button onclick="toggleLanguage()">Switch to English / Schakel naar Nederlands</button>
         </div>
         <div id="emergencyInfo">
-            <!-- Content will be loaded here -->
             <div class="error-message">Loading...</div>
         </div>
     </div>
@@ -184,7 +183,7 @@
             const path = window.location.pathname;
             const key = path.split('/').pop(); // Get the last part of the path
             return key || null; // Return null if no key
-}
+        }
 
         // Render profile data in the current language
         function renderProfile() {
@@ -244,26 +243,10 @@
 
         // Load profile data from JSON file
         async function loadProfileData() {
-    try {
-        const key = getKeyFromUrl();
-        console.log("Key from URL:", key); // Add this line
-
-        if (!key) {
-            document.getElementById('emergencyInfo').innerHTML = `
-                <div class="error-message">${translations[currentLanguage].notFound}</div>
-            `;
-            return;
-        }
-
-        // ... (rest of your loadProfileData function)
-    } catch (error) {
-        // ...
-    }
-}
-        async function loadProfileData() {
             try {
                 const key = getKeyFromUrl();
-                
+                console.log("Key from URL:", key); // Added for debugging
+
                 if (!key) {
                     document.getElementById('emergencyInfo').innerHTML = `
                         <div class="error-message">${translations[currentLanguage].notFound}</div>
@@ -271,7 +254,7 @@
                     return;
                 }
 
-                const response = await fetch('emergency-data.json'); // Or ./emergency-data.json
+                const response = await fetch('/emergency-data.json');
                 
                 if (!response.ok) {
                     throw new Error('Failed to load data');
