@@ -1,0 +1,44 @@
+{
+  "profiles": {
+    "x7r9": {
+      "firstName": "Jan",
+      "surname": "Jansen",
+      "address": "Dorpsstraat 123, 1234 AB Amsterdam",
+      "bloodType": "A+",
+      "organDonor": true,
+      "resuscitate": true,
+      "contacts": [
+        {
+          "name": "Maria Jansen",
+          "phone": "+31612345678"
+        },
+        {
+          "name": "Pieter Jansen",
+          "phone": "+31623456789"
+        },
+        {
+          "name": "Huisarts De Vries",
+          "phone": "+31698765432"
+        }
+      ]
+    },
+    "k3t5": {
+      "firstName": "Emma",
+      "surname": "De Boer",
+      "address": "Kerkweg 45, 5678 CD Utrecht",
+      "bloodType": "O-",
+      "organDonor": false,
+      "resuscitate": false,
+      "contacts": [
+        {
+          "name": "Thomas De Boer",
+          "phone": "+31634567890"
+        },
+        {
+          "name": "Sophia Bakker",
+          "phone": "+31645678901"
+        }
+      ]
+    }
+  }
+}

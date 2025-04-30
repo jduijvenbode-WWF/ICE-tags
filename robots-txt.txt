@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /emergency/
+Disallow: /emergency-data.json

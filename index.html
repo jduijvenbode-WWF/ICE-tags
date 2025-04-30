@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Emergency Information | Noodinformatie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .emergency-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .info-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .info-section:last-child {
+            border-bottom: none;
+        }
+        .info-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .language-toggle {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .language-toggle button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .contact-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .contact-item {
+            padding: 10px;
+            background-color: #f8f8f8;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .medical-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .medical-tag {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .blood-type {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .organ-donor-yes {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .organ-donor-no {
+            background-color: #f39c12;
+            color: white;
+        }
+        .resuscitate-yes {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .resuscitate-no {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        @media print {
+            .language-toggle {
+                display: none;
+            }
+            body {
+                background-color: white;
+            }
+            .emergency-card {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-toggle">
+            <button onclick="toggleLanguage()">Switch to English / Schakel naar Nederlands</button>
+        </div>
+        <div id="emergencyInfo">
+            <!-- Content will be loaded here -->
+            <div class="error-message">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'nl'; // Default language
+        let profileData = null;
+
+        // Translations
+        const translations = {
+            nl: {
+                title: "Noodinformatie",
+                personalInfo: "Persoonlijke Informatie",
+                firstName: "Voornaam",
+                surname: "Achternaam",
+                address: "Adres",
+                contacts: "Contactpersonen",
+                medicalInfo: "Medische Informatie",
+                bloodType: "Bloedgroep",
+                organDonor: "Orgaandonor",
+                resuscitate: "Reanimeren",
+                yes: "Ja",
+                no: "Nee",
+                notFound: "Profiel niet gevonden. Controleer de URL.",
+                errorLoading: "Fout bij het laden van de gegevens."
+            },
+            en: {
+                title: "Emergency Information",
+                personalInfo: "Personal Information",
+                firstName: "First Name",
+                surname: "Surname",
+                address: "Address",
+                contacts: "Emergency Contacts",
+                medicalInfo: "Medical Information",
+                bloodType: "Blood Type",
+                organDonor: "Organ Donor",
+                resuscitate: "Resuscitate",
+                yes: "Yes",
+                no: "No",
+                notFound: "Profile not found. Please check the URL.",
+                errorLoading: "Error loading data."
+            }
+        };
+
+        // Toggle between languages
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'nl' ? 'en' : 'nl';
+            renderProfile();
+        }
+
+        // Extract key from URL
+        function getKeyFromUrl() {
+            const pathSegments = window.location.pathname.split('/');
+            // Look for the key in the last segment of the path
+            const lastSegment = pathSegments[pathSegments.length - 1];
+            
+            // If the last segment is 'emergency' or empty, check for query parameters
+            if (lastSegment === 'emergency' || lastSegment === '') {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('key');
+            }
+            
+            return lastSegment;
+        }
+
+        // Render profile data in the current language
+        function renderProfile() {
+            const t = translations[currentLanguage];
+            
+            if (!profileData) {
+                document.getElementById('emergencyInfo').innerHTML = `
+                    <div class="error-message">${t.notFound}</div>
+                `;
+                return;
+            }
+
+            let contactsHtml = '';
+            profileData.contacts.forEach(contact => {
+                contactsHtml += `
+                    <li class="contact-item">
+                        <strong>${contact.name}</strong><br>
+                        <a href="tel:${contact.phone}">${contact.phone}</a>
+                    </li>
+                `;
+            });
+
+            const organDonorClass = profileData.organDonor ? 'organ-donor-yes' : 'organ-donor-no';
+            const resuscitateClass = profileData.resuscitate ? 'resuscitate-yes' : 'resuscitate-no';
+
+            document.getElementById('emergencyInfo').innerHTML = `
+                <div class="emergency-card">
+                    <div class="header">
+                        <h1>${t.title}</h1>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>${t.personalInfo}</h2>
+                        <span class="info-title">${t.firstName}:</span> ${profileData.firstName}<br>
+                        <span class="info-title">${t.surname}:</span> ${profileData.surname}<br>
+                        <span class="info-title">${t.address}:</span> ${profileData.address}
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>${t.contacts}</h2>
+                        <ul class="contact-list">
+                            ${contactsHtml}
+                        </ul>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>${t.medicalInfo}</h2>
+                        <div class="medical-info">
+                            <span class="medical-tag blood-type">${t.bloodType}: ${profileData.bloodType}</span>
+                            <span class="medical-tag ${organDonorClass}">${t.organDonor}: ${profileData.organDonor ? t.yes : t.no}</span>
+                            <span class="medical-tag ${resuscitateClass}">${t.resuscitate}: ${profileData.resuscitate ? t.yes : t.no}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load profile data from JSON file
+        async function loadProfileData() {
+            try {
+                const key = getKeyFromUrl();
+                
+                if (!key) {
+                    document.getElementById('emergencyInfo').innerHTML = `
+                        <div class="error-message">${translations[currentLanguage].notFound}</div>
+                    `;
+                    return;
+                }
+
+                const response = await fetch('/emergency-data.json');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load data');
+                }
+                
+                const data = await response.json();
+                profileData = data.profiles[key];
+                
+                renderProfile();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('emergencyInfo').innerHTML = `
+                    <div class="error-message">${translations[currentLanguage].errorLoading}</div>
+                `;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+    </script>
+</body>
+</html>
