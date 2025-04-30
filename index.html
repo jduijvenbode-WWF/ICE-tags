@@ -181,18 +181,10 @@
 
         // Extract key from URL
         function getKeyFromUrl() {
-            const pathSegments = window.location.pathname.split('/');
-            // Look for the key in the last segment of the path
-            const lastSegment = pathSegments[pathSegments.length - 1];
-            
-            // If the last segment is 'emergency' or empty, check for query parameters
-            if (lastSegment === 'emergency' || lastSegment === '') {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get('key');
-            }
-            
-            return lastSegment;
-        }
+            const path = window.location.pathname;
+            const key = path.split('/').pop(); // Get the last part of the path
+            return key || null; // Return null if no key
+}
 
         // Render profile data in the current language
         function renderProfile() {
