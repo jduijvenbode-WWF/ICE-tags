@@ -244,6 +244,23 @@
 
         // Load profile data from JSON file
         async function loadProfileData() {
+    try {
+        const key = getKeyFromUrl();
+        console.log("Key from URL:", key); // Add this line
+
+        if (!key) {
+            document.getElementById('emergencyInfo').innerHTML = `
+                <div class="error-message">${translations[currentLanguage].notFound}</div>
+            `;
+            return;
+        }
+
+        // ... (rest of your loadProfileData function)
+    } catch (error) {
+        // ...
+    }
+}
+        async function loadProfileData() {
             try {
                 const key = getKeyFromUrl();
                 
